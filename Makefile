@@ -41,7 +41,7 @@ temp-pc:
 	${SED} "s#/include/libgovarnam##g" govarnam.pc
 	${SED} "s#/lib\$$##g" govarnam.pc
 
-install-script:
+install.sh: install.sh.in
 	cp install.sh.in install.sh
 	${SED} "s#@INSTALL_PREFIX@#${INSTALL_PREFIX}#g" install.sh
 	${SED} "s#@VERSION@#${VERSION}#g" install.sh
@@ -49,11 +49,12 @@ install-script:
 	${SED} "s#@SO_NAME@#${SO_NAME}#g" install.sh
 	chmod +x install.sh
 
-install:
+.PHONY: install
+install: install.sh
 	./install.sh install
 
 .PHONY: uninstall
-uninstall: install-script
+uninstall: install.sh
 	./install.sh uninstall
 
 
@@ -84,7 +85,7 @@ nix:
 	PKG_CONFIG_PATH=$(realpath .):$$PKG_CONFIG_PATH $(MAKE) cli
 
 	$(MAKE) pc
-	$(MAKE) install-script
+	$(MAKE) install.sh
 
 .PHONY:
 build:
